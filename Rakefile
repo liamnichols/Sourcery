@@ -57,13 +57,18 @@ end
 task :build, [:build_fat] do |t, args|
   args.with_defaults(:build_fat => false)
   print_info "Building project (fat: #{args[:build_fat]})"
-  sh %Q(swift build -c release --arch x86_64 --arch arm64 --disable-sandbox --build-path #{BUILD_DIR})
+
+  # Use xcodebuild due to https://bugs.swift.org/browse/SR-15802
+  xcpretty %Q(xcodebuild -resolvePackageDependencies)
+  xcpretty %Q(xcodebuild -scheme sourcery -destination platform=macOS,arch=x86_64 -derivedDataPath #{BUILD_DIR}derivedData -archivePath #{BUILD_DIR}sourcery.xcarchive archive)
+
+  # Prepare the export direcotry
   sh %Q(rm -fr #{CLI_DIR})
   sh %Q(mkdir -p "#{CLI_DIR}bin")
 
+  # Export the build products and clean up
   sh %Q(cp SourceryJS/Resources/ejs.js #{CLI_DIR}bin)
-  `mv #{BUILD_DIR}apple/Products/Release/sourcery #{CLI_DIR}bin/`
-  #`mv #{BUILD_DIR}release/Sourcery_SourceryJS.bundle #{CLI_DIR}lib/`
+  sh %Q(mv #{BUILD_DIR}sourcery.xcarchive/Products/usr/local/bin/sourcery #{CLI_DIR}bin/)
   sh %Q(rm -fr #{BUILD_DIR})
 end
 
