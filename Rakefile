@@ -59,8 +59,7 @@ task :build, [:build_fat] do |t, args|
   print_info "Building project (fat: #{args[:build_fat]})"
 
   # Use xcodebuild due to https://bugs.swift.org/browse/SR-15802
-  xcpretty %Q(xcodebuild -list) # list schemes to help resolve SPM project resolution bugs when archiving
-  xcpretty %Q(xcodebuild -scheme sourcery -destination platform=macOS,arch=x86_64 -archivePath #{BUILD_DIR}sourcery.xcarchive archive)
+  xcpretty %Q(xcodebuild -scheme sourcery -destination generic/platform=macOS -archivePath #{BUILD_DIR}sourcery.xcarchive archive)
 
   # Prepare the export direcotry
   sh %Q(rm -fr #{CLI_DIR})
