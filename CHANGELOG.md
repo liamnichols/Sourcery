@@ -1,5 +1,9 @@
 # Sourcery CHANGELOG
 
+## 1.8.0
+## New Features
+- Embed lib_internalSwiftSyntaxParser dependency as a static library enabling a more portable binary and better support for SPM and Mint [#1037](https://github.com/krzysztofzablocki/Sourcery/pull/1037)
+
 ## 1.7.0
 
 ## New Features
